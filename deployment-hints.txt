@@ -1,0 +1,6 @@
+docker context use skoliose
+docker build /Volumes/1TB/Users/peterbernstein/Vue/xrmachine -t xrmachine:latest
+
+#on remote machine
+docker run -it -p 8081:80 -d xrmachine
+
