@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  xrfrontend:
+    container_name: xrfrontend
+    restart: always
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    volumes:
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/cert:/etc/nginx/cert
+    ports:
+      - "8001:8001"

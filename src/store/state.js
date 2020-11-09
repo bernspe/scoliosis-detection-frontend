@@ -23,6 +23,7 @@ const STATE = {
       reconnectError: false,
     },
 
+    socketVm: null,
 
     selectEntriesKeys:[],
     entries: {},

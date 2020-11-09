@@ -5,8 +5,20 @@
 * @return { string }
 */
 
+import { STATUS as AUTH_STATUS } from "@/store/mutations";
+
 export function getterAuth(state){
-    return state.isAuthenticated;
+    if (state.isAuthenticated) {
+        if (state.isAuthenticated == AUTH_STATUS.success) {
+            return true
+        } else
+        { return false} }
+    else {
+        return false
+}}
+
+export function getterUsername(state) {
+    return state.authUser;
 }
 
 export function getterStatus(state,id)  {

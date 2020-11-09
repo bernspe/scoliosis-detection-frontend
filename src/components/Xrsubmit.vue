@@ -97,6 +97,7 @@
                             headers: {
                                 Authorization: `Token ${this.$store.state.token}`,
                                 "Content-Type": "multipart/form-data"
+
                             },
                             data: formData,
                             params: {}

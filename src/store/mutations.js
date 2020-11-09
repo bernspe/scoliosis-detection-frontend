@@ -1,5 +1,12 @@
 import Vue from 'vue'
 import * as axios from "axios";
+import router from "@/router";
+
+export const STATUS = {
+  error: "error",
+  loading: "loading",
+  success: "success",
+};
 
 function _setEntryData(state, { id, title, status, img, modimg, fdata }) {
     Vue.set(state.entries, id, {'title':title, 'status':status, 'img':img, 'modimg':modimg, 'fdata':fdata});
@@ -11,6 +18,29 @@ export default {
     * @param { Vuexmod1State } state
     * @param { string } vedata
     */
+
+      loginRequest(state) {
+        state.isAuthenticated = STATUS.loading;
+      },
+      loginSuccess(state, loginName) {
+        state.isAuthenticated = STATUS.success;
+        console.log('Logging in: ',loginName);
+        state.authUser = loginName;
+      },
+      loginFailure(state) {
+        state.isAuthenticated = STATUS.error;
+        state.authUser = null;
+      },
+      logout(state) {
+        state.isAuthenticated = null;
+        state.authUser = null;
+        if (router.currentRoute.name !== "xrboard") {
+          router.push("/");
+        }
+      },
+
+
+
     setAuth(state, {auth}){
         state.isAuthenticated=auth;
     },
@@ -60,7 +90,8 @@ export default {
       Vue.prototype.$socket = event.currentTarget
       state.socket.isConnected = true
         console.log('Socket open');
-    },
+          },
+
     SOCKET_ONCLOSE (state)  {
       state.socket.isConnected = false
         console.log('Socket closed');

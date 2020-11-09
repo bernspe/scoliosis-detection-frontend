@@ -1,11 +1,13 @@
-//import * as actions from './actions';
+import * as actions from './actions';
 import mutations from './mutations';
 import state from './state';
 import * as getters from './getters';
+import auth from "./modules/auth";
 
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import webSocket from "@/store/modules/webSocket";
 
 Vue.use(Vuex)
 
@@ -15,11 +17,13 @@ axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
 
 export default new Vuex.Store ({
+    modules: { auth, webSocket },
     namespaced: true,
     mutations,
- //   actions,
+    actions,
     state,
    getters
 });
+
 
 

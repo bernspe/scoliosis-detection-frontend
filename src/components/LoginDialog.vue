@@ -10,25 +10,56 @@
                     </v-tab>
                     <v-tab-item>
                         <v-card class="px-4">
+                            <v-form @submit.prevent="login({ username, password })" ref="loginForm" v-model="valid" lazy-validation>
+
                             <v-card-text>
+
+                                <!--
                                 <v-form ref="loginForm" v-model="valid" lazy-validation>
+
+                                -->
                                     <v-row>
                                         <v-col cols="12">
-                                            <v-text-field v-model="loginName" label="Login Name" required></v-text-field>
+                                            <v-text-field v-model="username" label="Login Name" required></v-text-field>
                                         </v-col>
                                         <v-col cols="12">
-                                            <v-text-field v-model="loginPassword" :append-icon="show1?'eye':'eye-off'" :rules="[rules.required, rules.min]" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Password" hint="At least 8 characters" counter @click:append="show1 = !show1"></v-text-field>
+                                            <v-text-field v-model="password" :append-icon="show1?'eye':'eye-off'" :rules="[rules.required, rules.min]" :type="show1 ? 'text' : 'password'" name="input-10-1" label="Password" hint="At least 8 characters" counter @click:append="show1 = !show1"></v-text-field>
                                         </v-col>
                                         <v-col class="d-flex" cols="12" sm="6" xsm="12">
                                         </v-col>
                                         <v-spacer></v-spacer>
                                         <v-col class="d-flex" cols="12" sm="3" xsm="12" align-end>
-                                            <v-btn x-large block :disabled="!valid" color="success" @click="validate"> Login </v-btn>
+                                            <!--
+                                            <v-btn x-large block :disabled="!valid" color="success" @click="login"> Login </v-btn>
+                                            -->
+
                                         </v-col>
                                     </v-row>
-                                </v-form>
+
                             </v-card-text>
+
+                            <v-divider class="mt-8"></v-divider>
+                            <v-card-actions>
+                                  <v-btn color="primary" text type="submit" :disabled="isLoading">
+                                             Login
+                                            </v-btn>
+                              <v-spacer></v-spacer>
+                              <v-slide-x-reverse-transition>
+                                <span v-if="hasFailed" class="text-caption red--text"
+                                  >Please try again.</span
+                                >
+                              </v-slide-x-reverse-transition>
+                              <v-progress-circular
+                                v-if="isLoading"
+                                indeterminate
+                                color="primary"
+                                :size="20"
+                                :width="2"
+                              ></v-progress-circular>
+                            </v-card-actions>
+                        </v-form>
                         </v-card>
+
                     </v-tab-item>
                     <v-tab-item>
                         <v-card class="px-4">
@@ -57,6 +88,7 @@
                                     </v-row>
                                 </v-form>
                             </v-card-text>
+
                         </v-card>
                     </v-tab-item>
                 </v-tabs>
@@ -66,71 +98,58 @@
 </template>
 
 <script>
+    import { mapState} from "vuex";
 
-let base;
+import { STATUS as AUTH_STATUS } from "@/store/modules/auth";
 
-
-    import axios from 'axios'
 
     export default {
       computed: {
         passwordMatch() {
           return () => this.password === this.verify || "Password must match";
+        },
+
+        ...mapState({
+          authStatus: state => state.auth.status
+        }),
+        isLoading() {
+          return this.authStatus === AUTH_STATUS.loading;
+        },
+        hasFailed() {
+          return this.authStatus === AUTH_STATUS.error;
         }
+
       },
 
       methods: {
-        validate() {
-          if (this.$refs.loginForm.validate()) {
-            // submit form to server/API here...
-              const payload = {
-                username: this.loginName,
-                password: this.loginPassword
+          login: function({username, password}) {
+              if (this.$refs.loginForm.validate()) {
+                  console.log('Passing: ', username);
+                  this.$store.dispatch('auth/login', {username, password})
+                      .then(() => {
+                          this.$connect(this.$store.state.endpoints.webSocket + 'user/' + username + '/', {
+                              format: 'json',
+                              store: this.$store
+                          })
+                          }).catch(e => {
+                      console.log('Error during Websocket: ', e);
+                  })
+
               }
-              axios.post(this.$store.state.endpoints.obtainToken, payload)
-                   .then((response) => {
-                       this.$store.commit('updateToken', response.data.token)
+          },
 
-                       // get and set auth user
-                       base = {
-                           baseURL: this.$store.state.endpoints.baseUrl,
-                           headers: {
-                               Authorization: `Token ${this.$store.state.token}`,
-                               'Content-Type': 'application/json'
-                           },
-                           xhrFields: {
-                               withCredentials: true
-                           }
-                       }
-                       const axiosInstance = axios.create(base)
-                       axiosInstance({
-                           url: "/splineapp/",
-                           method: "get",
-                           params: {}
-                       })
-                           .then((response) => {
-                               this.$store.state.axiosBase=base;
-                               this.$store.commit("setAuthUser",
-                                   {authUser: payload.username, isAuthenticated: true}
-                               )
-                               const data = response.data
-                               this.$connect(this.$store.state.endpoints.webSocket + 'user/' + payload.username + '/', { format: 'json', store: this.$store })
-                               //this.$store.commit('registerUserSocket',{username: payload.username, isAuthenticated: true});
-                               this.$store.commit('setListData', {entries: data});
-                               this.$router.push('xrlist')
-                           })
-                   })
-
-
-          }
+          validate() {
         },
+
         reset() {
           this.$refs.form.reset();
         },
         resetValidation() {
           this.$refs.form.resetValidation();
         }
+
       },
+
       data: () => ({
         dialog: true,
         tab: 0,
@@ -145,8 +164,7 @@ let base;
         email: "",
         password: "",
         verify: "",
-        loginPassword: "",
-        loginName: "",
+        username: "",
         emailRules: [
           v => !!v || "Required",
           v => /.+@.+\..+/.test(v) || "E-mail must be valid"
