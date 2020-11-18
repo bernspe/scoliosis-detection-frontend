@@ -1,9 +1,11 @@
 .DS_Store
 node_modules
-/dist
-/dump
-/nginx
-/cert
+dist
+dump
+nginx
+cert
+
+deployment-hints.txt
 
 # local env files
 .env.local

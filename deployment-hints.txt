@@ -46,5 +46,13 @@ sudo etc/init.d/vsftpd start
 sudo useradd -m ftp_user -s/usr/sbin/nologin
 sudo passwd ftp_user
 
-find /var/www/html/xrm/ \( -type d -exec chmod 755 {} + \) -o \( -type f -exec chmod 644 {} + \)
+#Direct Deployment
+vue-cli-service build
+
+auf dist-Verzeichnis gehen und per FTP uploaden
+
+#Modifikation der Files auf dem Remote-Server
+sudo find /var/www/html/xrm/ \( -type d -exec chmod 755 {} + \) -o \( -type f -exec chmod 644 {} + \)
+
+#sollten die Dateien versehentlich im home/ftp_user Folder gelandet sein:::
 mv * /var/www/html/xrm/
