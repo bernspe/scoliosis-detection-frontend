@@ -1,12 +1,5 @@
 import Vue from 'vue'
 import * as axios from "axios";
-import router from "@/router";
-
-export const STATUS = {
-  error: "error",
-  loading: "loading",
-  success: "success",
-};
 
 function _setEntryData(state, { id, title, status, img, modimg, fdata }) {
     Vue.set(state.entries, id, {'title':title, 'status':status, 'img':img, 'modimg':modimg, 'fdata':fdata});
@@ -18,33 +11,10 @@ export default {
     * @param { Vuexmod1State } state
     * @param { string } vedata
     */
-
-      loginRequest(state) {
-        state.isAuthenticated = STATUS.loading;
-      },
-      loginSuccess(state, loginName) {
-        state.isAuthenticated = STATUS.success;
-        console.log('Logging in: ',loginName);
-        state.authUser = loginName;
-      },
-      loginFailure(state) {
-        state.isAuthenticated = STATUS.error;
-        state.authUser = null;
-      },
-      logout(state) {
-        state.isAuthenticated = null;
-        state.authUser = null;
-        if (router.currentRoute.name !== "xrboard") {
-          router.push("/");
-        }
-      },
-
-
-
-    setAuth(state, {auth}){
-        state.isAuthenticated=auth;
+    setBackEndVersion(state, payload){
+      state.versions.backend=payload.version.version
+        state.versions.backend_date=payload.version.date
     },
-
     setEntryData(state, { id, title, status, img, modimg, fdata }) {
          _setEntryData(state, { id, title, status, img, modimg, fdata });
     },
@@ -70,11 +40,6 @@ export default {
         })
     },
 
-    setAuthUser(state, {authUser, isAuthenticated}) {
-      Vue.set(state, 'authUser', authUser)
-      Vue.set(state, 'isAuthenticated', isAuthenticated)
-    },
-
     updateToken(state, newToken) {
       // TODO: For security purposes, take localStorage out of the project.
       localStorage.setItem('token', newToken);
@@ -95,10 +60,20 @@ export default {
     SOCKET_ONCLOSE (state)  {
       state.socket.isConnected = false
         console.log('Socket closed');
+
     },
     SOCKET_ONERROR (state,e)  {
       state.socket.isConnected = false
         console.log('Socket error: ',e);
+    },
+
+    // mutations for reconnect methods
+    SOCKET_RECONNECT(state, count) {
+      console.info('Reconnecting Websocket. ',state, count)
+    },
+    SOCKET_RECONNECT_ERROR(state) {
+      console.log('Reconnect error')
+        state.socket.reconnectError = true;
     },
     SOCKET_ONMESSAGE (state, message)  {
       state.socket.message = message
@@ -130,6 +105,8 @@ export default {
                 }
         }
     },
+
+
 
 
 };
