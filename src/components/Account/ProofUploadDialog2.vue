@@ -19,8 +19,11 @@
     import * as axios from "axios";
     import vue2Dropzone from "vue2-dropzone";
     import 'vue2-dropzone/dist/vue2Dropzone.min.css'
+    import component_tracer from "@/mixins/component_tracer";
 
     export default {
+        name:'ProofUploadDialog2',
+        mixins: [component_tracer],
         components: {
             vueDropzone: vue2Dropzone
         },

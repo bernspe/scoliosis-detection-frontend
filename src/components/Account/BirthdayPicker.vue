@@ -5,11 +5,10 @@
             :close-on-content-click="false"
             transition="scale-transition"
             offset-y
-            min-width="290px"
           >
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
-
+                      class="pa-2"
                 v-model="computedDateFormatted"
                 label="Geburtsdatum"
                 prepend-icon="mdi-calendar"
@@ -23,7 +22,7 @@
               ref="picker"
               v-model="date"
               :max="new Date().toISOString().substr(0, 10)"
-              min="1950-01-01"
+              min="1940-01-01"
               @change="save"
             ></v-date-picker>
           </v-menu>
@@ -32,12 +31,12 @@
 <script>
 
     export default {
-        data: () => ({
-            date: null,
+        data: (instance) => ({
+            date: instance.birthday_date,
             menu: false,
     }),
         mounted() {
-            this.date=this.birthday_date
+
         },
     watch: {
       menu (val) {
@@ -46,11 +45,18 @@
     },
         computed: {
 
-            computedDateFormatted () {
-                if (this.date) {
-                    return this.formatDate(this.date)
-                } else {
-                    return null
+             computedDateFormatted: {
+                set: function (val) {
+                    this.date = val
+                    this.date = this.birthday_date
+                },
+                get: function()
+                {
+                    if (this.date) {
+                        return this.formatDate(this.date)
+                    } else {
+                        return null
+                    }
                 }
             },
             computedYears () {

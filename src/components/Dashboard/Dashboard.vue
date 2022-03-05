@@ -1,5 +1,12 @@
 <template>
     <v-container>
+           <v-progress-linear
+      indeterminate
+      color="cyan"
+      v-if="$asyncComputed.users.updating"
+        >
+           </v-progress-linear>
+
         <v-row>
             <InviteUser
             label="Teilnehmer einladen"
@@ -36,17 +43,8 @@
                       </template>
                     <template v-slot:expanded-item="{ headers, item }">
                       <td :colspan="headers.length">
-                        Username: {{ item.username }}
-                          <v-list>
-                              <v-list-item
-                                      v-for="k in detailkeys"
-                              :key="k">
-                                  <v-list-item-content>
-                                      <v-list-item-title>{{k}}</v-list-item-title>
-                                  <v-list-item-subtitle>{{item[k]}}</v-list-item-subtitle>
-                                  </v-list-item-content>
-                              </v-list-item>
-                          </v-list>
+                          <Userdashboarditem v-if="!item.is_superuser" :username="item.username"></Userdashboarditem>
+
                       </td>
                     </template>
                         <template v-slot:item.proofstatus="{ item }">
@@ -81,16 +79,14 @@
                           </v-chip>
                         </template>
 
-                        <template v-slot:item.actions="{ item }">
-                          <v-icon
-                            small
-                            class="mr-2"
-                            @click="showItemProof(item)"
-                          >
-                            mdi-book-account-outline
-                          </v-icon>
-
-                  </template>
+                        <template v-slot:item.helpdesk_caseroom_waiting="{ item }">
+                          <v-chip
+                            color="yellow"
+                            dark
+                            v-if="item.helpdesk_caseroom_waiting.length>0"
+                          > HD
+                          </v-chip>
+                        </template>
 
                     </v-data-table>
                   </div>
@@ -98,111 +94,7 @@
             </v-col>
 
         </v-row>
-        <v-row>
-            <v-list>
-                <v-subheader>
-                    Proofs for {{ userproof_name }}
-                </v-subheader>
-                <v-subheader>
-                    Requested roles {{ userproof_roles }}
-                </v-subheader>
-                <v-list-item
-                v-for="upr in userproofs"
-                :key="upr.id">
-                    <v-list-item-content>
 
-                        <v-list-item-title>
-                             <v-badge
-                                value="4"
-                                :color="getColorFromCheckedStatus(upr)"
-                         >
-                            {{ upr.proof_type }}
-                             </v-badge>
-                        </v-list-item-title>
-
-                        <v-list-item-subtitle>
-                            {{ upr.id }}
-                        </v-list-item-subtitle>
-                        <v-divider></v-divider>
-
-                        <v-img
-                              :src="getBaseUrl+upr.img"
-                              :width="width"
-                              contain
-                        ></v-img>
-
-                        <v-divider></v-divider>
-                        <v-slider
-                              v-model="width"
-                              class="align-self-stretch"
-                              min="50"
-                              max="500"
-                              step="1"
-                            ></v-slider>
-                        <div v-show="!upr.checkedby">
-                        <v-btn
-                          class="ma-2"
-                          outlined
-                          color="indigo"
-                          @click="validateProof(upr)"
-                        >
-                          Validate Proof
-                        </v-btn>
-                        <v-btn
-                          class="ma-2"
-                          outlined
-                          color="red"
-                          @click="reject=true"
-                        >
-                          Reject Proof
-                        </v-btn>
-                            <v-row v-show="reject">
-                                <v-col cols="12">
-                                  <v-text-field
-                                          ref="messagefield"
-                                    v-model="message"
-                                    append-outer-icon="mdi-send"
-                                    filled
-                                    clear-icon="mdi-close-circle"
-                                    clearable
-                                    label="Give the User an explanation for Rejection"
-                                    type="text"
-                                    @click:append-outer="sendMessage(upr)"
-                                    @click:clear="clearMessage"
-                                  ></v-text-field>
-                                </v-col>
-                            </v-row>
-
-                        </div>
-                    </v-list-item-content>
-                </v-list-item>
-                <v-btn
-                          class="ma-2"
-                          outlined
-                          color="indigo"
-                          @click="validateUser(userproof_username,'VALIDATED',false)"
-                        >
-                          Validate User
-                </v-btn>
-                <v-btn
-                          class="ma-2"
-                          outlined
-                          color="indigo"
-                          @click="validateUser(userproof_username,'VALIDATED',true)"
-                        >
-                          Validate Staff Member
-                </v-btn>
-                <v-btn
-                          class="ma-2"
-                          outlined
-                          color="red"
-                          @click="validateUser(userproof_username,'NONPROVEN', false)"
-                        >
-                          Revoke Validation
-                </v-btn>
-
-            </v-list>
-        </v-row>
 
         <v-snackbar
       v-model="snackbar"
@@ -224,37 +116,32 @@
 </template>
 
 <script>
-    import axios from "axios";
+
     import InviteUser from "@/components/CaseRoom/InviteUser";
+
+    import Userdashboarditem from "@/components/Dashboard/UserDashboardItem/UserDashboardItem";
 
 
     export default {
-        components: {InviteUser},
+        components: {Userdashboarditem, InviteUser},
         props: {
         },
         data () {
               return {
-                  width: 50,
                   expanded: [],
                 search: '',
-                  message:'',
-                users: [],
                   snackbar: false,
                 snackbar_text:"",
-                  userproofs: [],
-                  userproof_name:'',
-                  userproof_username:'',
-                  userproof_roles:'',
-                  reject: false,
                   boolitems: ['is_active','is_staff','is_emailvalidated'],
-                detailkeys: ['date_of_birth','sex','date_joined','last_login','expires','proofstatus','groups','user_permissions']
+
               }
             },
             computed: {
-             getBaseUrl() { return this.$store.state.endpoints.baseUrl.slice(0,-1) },
+
               headers () {
                 return [
-                  {
+                  { text: '', value: 'data-table-expand' },
+                    {
                     text: 'Vorname',
                     align: 'start',
                     sortable: false,
@@ -267,17 +154,34 @@
                   },
 
                   { text: 'eMail', value: 'email' },
+                    {text: 'Date Joined', value: 'date_joined', sortable:true},
                     { text: 'Rollen', value: 'roles' },
-                    { text: 'ProofStatus', value: 'proofstatus' },
+                    { text: 'ProofStatus', value: 'proofstatus' , sortable:true},
                     { text: 'isActive', value: 'is_active' },
                     { text: 'isStaff', value: 'is_staff' },
                     { text: 'isEmailValidated', value: 'is_emailvalidated' },
-                    { text: '', value: 'data-table-expand' },
-                    { text: 'Actions', value: 'actions', sortable: false },
+                    { text: 'Helpdesk', value: 'helpdesk_caseroom_waiting'},
                 ]
               },
 
             },
+        asyncComputed: {
+          users: {
+              get() {
+                  return new Promise((resolve, reject) => {
+                      setTimeout(() => {
+                          this.$store.dispatch('auth/getUserProfiles')
+                                .then((response)=> {
+                                    resolve(response)
+                                }).catch(()=> {
+                                    reject()
+                                })
+                      }, 1000)
+                  })
+              },
+              default: []
+          }
+        },
             methods: {
               getColorFromCheckedStatus(item) {
                 if (item.checkedby)  {
@@ -303,108 +207,9 @@
                 return 'grey'
               },
 
-                showItemProof: function(item) {
-                   var config = {
-                            method: 'POST',
-                            url: this.$store.state.endpoints.baseUrl+'userproof/retrieve_user_proof/',
-                            headers: {
-                                  authorization: `Bearer ${this.$store.state.token}`,
-                                  'Content-Type': 'application/json'
-                              },
-                              xhrFields: {
-                                  withCredentials: true
-                              },
-                            data: {'user':item.username}
-                        };
-                    axios(config).then((response)=>{
-                        this.userproofs = response.data;
-                        this.userproof_name = item.first_name+ ' '+item.last_name;
-                        this.userproof_roles = item.roles;
-                        this.userproof_username=item.username;
-                    }).catch((e)=> {
-                        console.log(e)
-                    })
-            },
-                validateProof: function(item) {
-                   var config = {
-                            method: 'POST',
-                            url: this.$store.state.endpoints.baseUrl+'userproof/'+item.id+'/validate_proof/',
-                            headers: {
-                                  authorization: `Bearer ${this.$store.state.token}`,
-                                  'Content-Type': 'application/json'
-                              },
-                              xhrFields: {
-                                  withCredentials: true
-                              },
-                        };
-                    axios(config).then((response)=>{
-                        console.log(response)
-                    }).catch((e)=> {
-                        console.log(e)
-                    })
-            },
-                rejectProof: function(item) {
-                   var config = {
-                            method: 'DELETE',
-                            url: this.$store.state.endpoints.baseUrl+'userproof/'+item.id+'/',
-                            headers: {
-                                  authorization: `Bearer ${this.$store.state.token}`,
-                                  'Content-Type': 'application/json'
-                              },
-                              xhrFields: {
-                                  withCredentials: true
-                              },
-                        };
-                    axios(config).then((response)=>{
-                        this.userproofs = response.data;
-                    }).catch((e)=> {
-                        console.log(e)
-                    })
-            },
-                      sendMessage (item) {
-                        this.rejectProof(item)
-                         this.$store.dispatch('auth/eMailUser',{
-                             username:item['referring_User'],
-                            subject: 'Nachweis nicht akzeptiert und gelöscht.',
-                            message: this.message})
-                          .then((response)=> {
-                              this.$refs.messagefield.label=response.data
-                          }).catch((e)=> {
-                              console.log(e)
-                         })
-                          this.clearMessage()
-                          this.reject=false
-                      },
-                      clearMessage () {
-                        this.message = ''
-                      },
 
-                validateUser: function(username,status,is_staff) {
-                   var config = {
-                            method: 'PATCH',
-                            url: this.$store.state.endpoints.baseUrl+'users/'+username+'/',
-                            headers: {
-                                  authorization: `Bearer ${this.$store.state.token}`,
-                                  'Content-Type': 'application/json'
-                              },
-                              xhrFields: {
-                                  withCredentials: true
-                              },
-                            data: {'proofstatus':status,'is_staff':is_staff},
-                        };
-                    axios(config).then((response)=>{
-                        console.log(response)
-                    }).catch((e)=> {
-                        console.log(e)
-                    })
-            },
         refreshUserTable: function() {
-            this.$store.dispatch('auth/getUserProfiles')
-            .then((response)=> {
-                this.users=response
-            }).catch((e)=> {
-                console.log(e)
-            })
+            this.$asyncComputed.users.update()
         },
        onUserInvited(payload){
             if (payload.user=='pdf'){
@@ -417,12 +222,7 @@
 
             },
         mounted() {
-            this.$store.dispatch('auth/getUserProfiles')
-            .then((response)=> {
-                this.users=response
-            }).catch((e)=> {
-                console.log(e)
-            })
+
         },
     };
 </script>

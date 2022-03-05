@@ -16,24 +16,14 @@
       </template>
     <v-carousel v-model="model">
      <v-carousel-item
-      v-for="(color, i) in colors"
-      :key="color"
+        v-for="(item,i) in items"
+        :key="i"
+        :src="basePath+item.src"
+        reverse-transition="fade-transition"
+        transition="fade-transition"
+        contain
     >
-      <v-sheet
-        :color="color"
-        height="100%"
-        tile
-      >
-        <v-row
-          class="fill-height"
-          align="center"
-          justify="center"
-        >
-          <div class="display-3">
-            Slide {{ i + 1 }}
-          </div>
-        </v-row>
-      </v-sheet>
+
     </v-carousel-item>
   </v-carousel>
         </v-dialog>
@@ -46,17 +36,22 @@
       data: () => ({
           dialog: false,
         model: 0,
-      colors: [
-        'primary',
-        'secondary',
-        'yellow darken-2',
-        'red',
-        'orange',
-      ],
+             items: [
+                {src: 'intro_willkommen.jpg'},
+                {src: 'intro_authentizitaet.jpg'},
+                {src: 'intro_precision.jpg'},
+                {src: 'intro_cowork.jpg'},
+            ]
+
     }),
+        computed: {
+                   basePath: () => {
+                       return 'https://skoliosekinder.de/images_intro/'
+            }
+        },
         watch: {
             model(newValue, oldValue) {
-                if ((newValue>oldValue) && (newValue==4)) {
+                if ((newValue>oldValue) && (newValue===3)) {
                     this.$emit('IntroFinished')
                 }
             }

@@ -1,0 +1,41 @@
+{
+    "id": "d5d82b1f-f157-4807-b6eb-5cf98a412329",
+    "owner": "6ef734f7-e382-444f-9ae3-d68d960c807c",
+    "owner_fullname": "Marie Grund",
+    "owner_birthday": "2007-06-09",
+    "type": "process_upright",
+    "status": "MEASURE_LEVEL3",
+    "locked": false,
+    "created": "2021-06-03T11:32:59.030548Z",
+    "title": "M2",
+    "formatted_data": {
+        "CROP_LEVEL1_performance": 0,
+        "id": "d5d82b1f-f157-4807-b6eb-5cf98a412329",
+        "CLASSIFY_LEVEL1_performance": 0,
+        "CLASSIFY_LEVEL1_result": "dummy",
+        "CLASSIFY_LEVEL2_result": {
+            "type": "process_upright"
+        },
+        "MEASURE_LEVEL2_result": {
+            "MaxWaistAngle": -0.33703010985780774,
+            "MinWaistAngle": -0.447614170860553,
+            "CurvatureDifference": 0.022163891571083283,
+            "CurvatureMaxDifference": 0.0,
+            "ShoulderHeightDifference": 0.0058823529411764705,
+            "WaistPointHeightDifference": -0.27058823529411763,
+            "WaistAreaDifferences": [
+                0.32941176470588235,
+                -2.711764705882353,
+                -6.3088235294117645,
+                -6.588235294117647
+            ]
+        }
+    },
+    "data": null,
+    "errors_dict": {
+        "MEASURE_LEVEL2": "ImgWorker exception: list index out of range"
+    },
+    "img": "http://localhost:8000/media/splineapp/d5d82b1f-f157-4807-b6eb-5cf98a412329/IMG_6205.JPG",
+    "modified_img": "http://localhost:8000/media/splineapp/d5d82b1f-f157-4807-b6eb-5cf98a412329/modified.jpg",
+    "resized_img": "http://localhost:8000/media/splineapp/d5d82b1f-f157-4807-b6eb-5cf98a412329/resized.jpg"
+}

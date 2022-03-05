@@ -29,9 +29,9 @@ cat id_rsa_root.pub | ssh root@skoliosekinder.de 'cat >> /root/.ssh/authorized_k
 #NGinx Config
 scp /Volumes/1TB/Users/peterbernstein/Vue/xrmachine/nginx/skoliosekinder.de root@skoliosekinder.de:/etc/nginx/sites-enabled/skoliosekinder.de
 #Certificates
-scp /Volumes/1TB/Users/peterbernstein/Vue/xrmachine/data/cert/cert_skoliosekinder.de.txt root@skoliosekinder.de:/etc/ssl/certs/cert_skoliosekinder.de.txt
-scp /Volumes/1TB/Users/peterbernstein/Vue/xrmachine/data/cert/intermediate_skoliosekinder.de.txt root@skoliosekinder.de:/etc/ssl/certs/intermediate_skoliosekinder.de.txt
-scp /Volumes/1TB/Users/peterbernstein/Vue/xrmachine/data/cert/star_skoliosekinder_de.key root@skoliosekinder.de:/etc/ssl/private/star_skoliosekinder_de.key
+scp /Volumes/1TB/Users/peterbernstein/Vue/xrmachine/cert/2021v/cert_skoliosekinder.de.txt root@skoliosekinder.de:/etc/ssl/certs/cert_skoliosekinder.de.txt
+scp /Volumes/1TB/Users/peterbernstein/Vue/xrmachine/cert/2021v/intermediate_skoliosekinder.de.txt root@skoliosekinder.de:/etc/ssl/certs/intermediate_skoliosekinder.de.txt
+scp /Volumes/1TB/Users/peterbernstein/Vue/xrmachine/data/cert/2021v/star_skoliosekinder_de.key root@skoliosekinder.de:/etc/ssl/private/star_skoliosekinder_de.key
 
 
 #NGINX Befehle

@@ -1,0 +1,76 @@
+{
+  "camera_modes": {
+    "process_upright_start": {
+      "type": "process_upright",
+      "mode_de": "aufrecht",
+      "overlay_img": "https://skoliosekinder.de/images_template/template_upright.png",
+      "instruction": "Zeige deinen nackten Rücken und pass ihn möglichst gerade in die Skizze ein."
+    },
+    "process_upright_left": {
+      "type": "process_upright",
+      "mode_de": "aufrecht",
+      "overlay_img": "https://skoliosekinder.de/images_template/template_upright.png",
+      "instruction": "Halte nun etwa 10 cm von links auf den Rücken."
+    },
+    "process_upright_right": {
+      "type": "process_upright",
+      "mode_de": "aufrecht",
+      "overlay_img": "https://skoliosekinder.de/images_template/template_upright.png",
+      "instruction": "Halte nun etwa 10 cm von rechts auf den Rücken."
+    },
+    "process_bendforward_start": {
+      "type": "process_bendforward",
+      "mode_de": "gebeugt",
+      "overlay_img": "https://skoliosekinder.de/images_template/template_bend.png",
+      "instruction": "Beuge dich nach vorn und pass den gebeugten Rücken in die Skizze ein."
+    },
+    "process_bendforward_up": {
+      "type": "process_bendforward",
+      "mode_de": "gebeugt",
+      "overlay_img": "https://skoliosekinder.de/images_template/template_bend.png",
+      "instruction": "Halte nun die Kamera etwa 20 cm höher."
+    },
+    "process_bendforward_down": {
+      "type": "process_bendforward",
+      "mode_de": "gebeugt",
+      "overlay_img": "https://skoliosekinder.de/images_template/template_bend.png",
+      "instruction": "Halte nun die Kamera etwa 20 cm tiefer."
+    },
+    "id-front": {
+      "type": "id",
+      "mode_de": "ID Vorderseite",
+      "overlay_img": "https://skoliosekinder.de/images_template/ausweis-front.png",
+      "instruction": "Fotografiere die Vorderseite deines Ausweises."
+    },
+    "id-back": {
+      "type": "id",
+      "mode_de": "ID Rückseite",
+      "overlay_img": "https://skoliosekinder.de/images_template/ausweis-back.png",
+      "instruction": "Fotografiere die Rückseite deines Ausweises."
+    },
+    "dr-id-front": {
+      "type": "dr-id",
+      "mode_de": "Arztausweis Vorderseite",
+      "overlay_img": "https://skoliosekinder.de/images_template/ausweis-front.png",
+      "instruction": "Fotografiere die Vorderseite deines Arzt-Ausweises."
+    },
+    "dr-id-back": {
+      "type": "dr-id",
+      "mode_de": "Arztausweis Rückseite",
+      "overlay_img": "https://skoliosekinder.de/images_template/ausweis-back.png",
+      "instruction": "Fotografiere die Rückseite deines Arzt-Ausweises."
+    },
+    "avatar-image": {
+      "type": "avatar",
+      "mode_de": "Profilbild",
+      "overlay_img": "",
+      "instruction": "Du kannst dich jetzt fotografieren."
+    }
+  },
+  "camera_programs": {
+    "SSM": ["process_upright_start","process_upright_left","process_upright_right","process_bendforward_start","process_bendforward_up","process_bendforward_down"],
+    "id": ["id-front","id-back"],
+    "dr-id": ["dr-id-front","dr-id-back"],
+    "avatar": ["avatar-image"]
+  }
+}

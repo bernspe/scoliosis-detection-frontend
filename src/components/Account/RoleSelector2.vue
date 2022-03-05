@@ -1,31 +1,14 @@
 <template>
-        <v-combobox
+        <v-select
           v-model="select"
           :items="items"
           :label=labelval
-          multiple
           chips
           return-object
           @change="changedetect"
         >
-          <template v-slot:selection="data">
-            <v-chip
-              :key="JSON.stringify(data.item)"
-              v-bind="data.attrs"
-              :input-value="data.selected"
-              :disabled="data.disabled"
-              @click:close="data.parent.selectItem(data.item)"
-            >
 
-              <v-avatar
-                class="accent white--text"
-                left
-                v-text="data.item.text.slice(0, 1).toUpperCase()"
-              ></v-avatar>
-              {{ data.item.text }}
-            </v-chip>
-          </template>
-        </v-combobox>
+        </v-select>
 
 </template>
 
@@ -34,32 +17,43 @@
 
 
   import axios from "axios";
+  import {mapGetters} from "vuex";
 
   export default {
       props: {
-          value:Array,
+          value: {
+              type: [String, Array],
+          },
           proofs:Array,
           label: String,
           audience: String,
-          birthday_date: Date,
-
+          birthday_date_str: String,
+            ignore_age:Boolean,
       },
     data: () => ({
-        select:[],
+        select:'',
         items:[],
         proof:[],
 
     }),
       computed: {
+              ...mapGetters('auth',['isStaff','isAdmin']),
+              value_checked() {
+                return (typeof(this.value)===String) ? this.value : this.value.length>0 ? this.value[0] : null
+              },
+          birthday_date () {
+            return new Date(this.birthday_date_str);
+          },
         labelval () {
             return this.label ? this.label : 'Ich bin ...'
         },
         population () {
-            return this.audience ? this.audience : 'list-users'
+            return this.audience ? this.audience : (this.isStaff || this.isAdmin) ? 'list-all': 'list-users'
         },
         age() {
             return this.getYears(this.birthday_date)
-        }
+        },
+
       },
       methods: {
           getYears (date) {
@@ -68,19 +62,9 @@
                 var Difference_In_Years = (today-birthday) / (1000 * 3600 * 24 * 365);
                 return Math.round(Difference_In_Years)
             },
-          distillSelection: function () {
-            // Geht die bisherigen Selektionen durch und stellt die dafür notwendigen Proofs zusammen
-              let p=this.select.map(x => x.proof)
-            this.proof=[]
-            p.forEach((val) => {
-                if (!this.proof.includes(val) && (val!='nan')) {
-                    this.proof.push(val)
-                }
-            })
-          },
+
         changedetect: function () {
-            this.distillSelection()
-            this.$emit('updateRole',{value: this.select.map(x => x.key), proof: this.proof})
+            this.$emit('updateRole',{value: [this.select.key], proof: this.select.proof})
         }
       },
       mounted(){
@@ -95,7 +79,7 @@
                   xhrFields: {
                       withCredentials: true
                   },
-                data: {"language":"de","format":this1.population}
+                data: {"language":"de","format":this1.population,"ignoreage":this1.ignore_age}
           }
           axios(config).then(function (response) {
               this1.items= response.data;
@@ -103,12 +87,11 @@
               console.log(error)
           })
               .then(()=> {
-                  this1.value.forEach(role => {
-                      this1.select.push(this1.items.find(x=> x.key==role))
-                  })
+                      this1.select=(this1.items.find(x=> x ? x.key===this1.value_checked : null))
+
           }).then(()=> {
-            this1.distillSelection()
-              this.$emit('updateRole',{value: this.select.map(x => x.key), proof: this.proof})
+            //this1.distillSelection()
+              if (this1.select) this.$emit('updateRole',{value: [this.select.key], proof: this.select.proof})
           });
       }
   }

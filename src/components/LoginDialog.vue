@@ -18,11 +18,17 @@
                             <v-card-text>
                                     <v-row>
                                         <v-col cols="12">
-                                            <v-text-field v-model="email" :rules="emailRules" ref="emailfield" label="E-mail" required></v-text-field>
+                                            <v-text-field
+                                                    v-model="email"
+                                                    data-cy="email_field"
+                                                    :rules="emailRules"
+                                                    ref="emailfield"
+                                                    label="E-mail" required></v-text-field>
                                         </v-col>
                                         <v-col cols="12">
                                             <v-text-field
                                                     v-model="password"
+                                                    data-cy="password_field"
                                                     :append-icon="show1?'eye':'eye-off'"
                                                     :type="show1 ? 'text' : 'password'"
                                                     name="input-10-1"
@@ -34,18 +40,26 @@
                             </v-card-text>
                             <v-divider class="mt-8"></v-divider>
                             <v-card-actions>
-                                  <v-btn color="primary" text type="submit" :disabled="isLoading">
+                                <v-row dense>
+                                <v-col>
+                                    <v-btn data-cy="login_button"
+                                            color="primary"
+                                            text type="submit"
+                                            :disabled="isLoading">
                                              Anmelden
                                   </v-btn>
-
+                                </v-col>
+                                    <v-col>
                                 <NewPasswordDialog
                                         v-if="email"
                                  :email="email"
                                         label="Passwort vergessen"
                                  >
                                 </NewPasswordDialog>
+                                        </v-col>
+                                </v-row>
 
-                              <v-spacer></v-spacer>
+                                  <v-spacer></v-spacer>
                               <v-slide-x-reverse-transition>
                                 <span v-if="hasFailed" class="text-caption red--text"
                                   >Bitte versuch es nochmal.</span
@@ -116,19 +130,15 @@
     import {mapGetters, mapState} from "vuex";
 
 import { STATUS as AUTH_STATUS } from "@/store/modules/auth";
-import router from "@/router";
+
     import NewPasswordDialog from "@/components/Account/NewPasswordDialog";
+    import {run_init_after_auth} from "@/initblock2";
+    import component_tracer from "@/mixins/component_tracer";
 
     export default {
         components: {NewPasswordDialog},
-        mounted: function() {
-            this.email= this.$route.query.email
-            if (this.email ? this.email.includes("@skoliosekinder.de"): false){
-                this.password=process.env['VUE_APP_DEFAULT_PASSWORD']
-            }
-
-        },
-
+        name:'logindialog',
+        mixins: [component_tracer],
       computed: {
         ...mapGetters("auth", ["isAuthenticated",'getterFirstname','getterUsername']),
         ...mapState({
@@ -160,19 +170,27 @@ import router from "@/router";
         },
 
           login: function({email, password}) {
+              var this1=this
+              var notify=this.issuing_user_notification
               if (this.$refs.loginForm.validate()) {
                   if (password=='') { password='startpass'}
-                  this.$store.dispatch('auth/login', {email, password})
+                  this.$store.commit('auth/resetAuthStatus')
+                  this.$store.dispatch('auth/login', {email, password, notify})
                       .then(() => {
+                          run_init_after_auth(this1)
+                          /*
                           this.initializeSession().then(() => {
                             console.log('Login Success')
-                              router.push('/');
+                              router.push('/');*/
                           }).catch((e) => {
                               //Handling of login error
-                              this.$store.commit('auth/resetAuthStatus')
+
                               console.log(e);
-                          });
-                      })
+                          }).finally(()=> {
+                              // fire websocket message to issuing user
+
+                  });
+
               }
           },
         initializeSession() {
@@ -185,11 +203,25 @@ import router from "@/router";
                           format: 'json',
                           store: this1.$store
                       })
+                      if (this1.$store.getters['auth/isCaregiver']) {
+                        this1.$nextTick(() => {
+                          this1.$store.dispatch('auth/getDependentChildren')
+                        })
+                      }
+                        if (this1.$store.getters['auth/isMed']) {
+                          this1.$nextTick(() => {
+                            this1.$store.dispatch('auth/getMyPatients')
+                          })
+                        }
+                      this1.$nextTick(()=>{
+                            this1.$store.dispatch('auth/getUserRolesDict')
+                         })
                       resolve()
                   }).catch(e => {
                       console.log('Error during Websocket init: ', e);
                       reject(e)
                   })
+
               })
         },
 
@@ -198,12 +230,14 @@ import router from "@/router";
                 if (this.$refs.registerForm.validate()) {
                   this.$store.dispatch('auth/register', {email:email, password: np, firstName:firstName, lastName:lastName})
                       .then(() => {
+                          run_init_after_auth(this)
+                          /*
                           this.initializeSession().then(() => {
-                            router.push('/');
+                            router.push('/')
                           }).catch((e) => {
                               //Handling of register error
                               console.log(e);
-                          });
+                          });*/
                       }).catch((e)=> {
                           this.$store.commit('auth/resetAuthStatus')
                           console.log(e)
@@ -248,7 +282,7 @@ import router from "@/router";
           min: v => (v && v.length >= 4) || "Mindestens 4 Zeichen",
             minToken: v => (v && v.length == 6) || "Genau 6 Zeichen"
         },
-
+        issuing_user_notification: null,
       }),
         props: {
         },

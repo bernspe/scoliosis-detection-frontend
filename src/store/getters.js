@@ -14,6 +14,23 @@ export function getterBackendDate(state) {
     return state.versions.backend_date;
 }
 
+
+export function getterDevice(state) {
+    return state.device;
+}
+
+export function isMobile(state) {
+    return state.device.isMobile;
+}
+
+export function isThisDeviceFastLogin(state){
+    return state.device.isInList;
+}
+
+export function getterOtherDevices(state) {
+    return state.other_devices;
+}
+
 export function getterStatus(state,id)  {
     return state.entries[id].status
 }
@@ -34,4 +51,12 @@ export function getterSelectedEntries(state){
             d[id]=state.entries[id];
         }
         return d;
+}
+
+export function getterAuthToken(state) {
+    return 'Bearer '+state.token;
+}
+
+export function getterInformationSwitch(state) {
+    return state.informationSwitch;
 }

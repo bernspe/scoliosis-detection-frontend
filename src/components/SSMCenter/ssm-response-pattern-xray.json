@@ -1,0 +1,121 @@
+{
+    "id": "31abfe2b-d202-49f4-b170-9e2e23333667",
+    "owner": "6ef734f7-e382-444f-9ae3-d68d960c807c",
+    "owner_fullname": "Marie Grund",
+    "owner_birthday": "2007-06-09",
+    "type": "process_xray_cobb",
+    "status": "MEASURE_LEVEL3",
+    "locked": false,
+    "created": "2021-06-03T11:32:42.902729Z",
+    "title": "M1",
+    "formatted_data": {
+        "CROP_LEVEL1_performance": 0,
+        "id": "31abfe2b-d202-49f4-b170-9e2e23333667",
+        "CLASSIFY_LEVEL1_performance": 0,
+        "CLASSIFY_LEVEL1_result": "dummy",
+        "CLASSIFY_LEVEL2_result": {
+            "type": "process_xray_cobb"
+        },
+        "MEASURE_LEVEL2_result": {
+            "T2": [
+                276,
+                45
+            ],
+            "T3": [
+                274,
+                69
+            ],
+            "T4": [
+                274,
+                88
+            ],
+            "T5": [
+                269,
+                111
+            ],
+            "T6": [
+                265,
+                131
+            ],
+            "T7": [
+                259,
+                156
+            ],
+            "T8": [
+                257,
+                177
+            ],
+            "T9": [
+                257,
+                198
+            ],
+            "T10": [
+                261,
+                218
+            ],
+            "T11": [
+                266,
+                247
+            ],
+            "T12": [
+                272,
+                272
+            ],
+            "L1": [
+                275,
+                302
+            ],
+            "L2": [
+                276,
+                334
+            ],
+            "L3": [
+                273,
+                370
+            ],
+            "L4": [
+                267,
+                408
+            ],
+            "L5": [
+                261,
+                441
+            ],
+            "upperVertebra": "T2",
+            "lowerVertebra": "L5",
+            "COBB_vertebrae": [
+                [
+                    "T6",
+                    "T11"
+                ],
+                [
+                    "T11",
+                    "L4"
+                ]
+            ],
+            "COBB_angles": [
+                24,
+                21
+            ],
+            "val_COBB_vertebrae": [
+                [
+                    "T5",
+                    "T11"
+                ],
+                [
+                    "T11",
+                    "L4"
+                ]
+            ],
+            "val_COBB_angles": [
+                28,
+                22
+            ]
+        }
+    },
+    "data": null,
+    "errors_dict": null,
+    "img": "http://localhost:8000/media/splineapp/31abfe2b-d202-49f4-b170-9e2e23333667/testxray2.jpg",
+    "modified_img": "http://localhost:8000/media/splineapp/31abfe2b-d202-49f4-b170-9e2e23333667/modified.jpg",
+    "resized_img": "http://localhost:8000/media/splineapp/31abfe2b-d202-49f4-b170-9e2e23333667/resized.jpg"
+}

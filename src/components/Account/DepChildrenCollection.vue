@@ -1,6 +1,8 @@
 <template>
     <v-container>
-     <v-chip-group
+     <v-row dense>
+         <v-col>
+        <v-chip-group
         v-model="selection"
         active-class="deep-purple--text text--accent-4"
         column
@@ -12,7 +14,7 @@
                 :key="child.username"
                 color="green"
                 outlined
-                @click="childdetail=!childdetail"
+                @click="returnchild ? returnselectedchild(child) : childdetail=!childdetail"
         >
             <v-icon>
                 mdi-account-child-circle
@@ -21,19 +23,18 @@
 
             </v-chip>
      </v-chip-group>
+             </v-col>
+         <v-col>
             <v-btn
       class="mx-2"
-      fab
-      dark
+      dark outlined
       color="indigo"
+      @click="addchild=true"
     >
-      <v-icon dark
-      @click="addchild=true">
-        mdi-plus
-      </v-icon>
+        Kind hinzufügen
     </v-btn>
-
-
+    </v-col>
+</v-row>
 
   <v-form v-model="valid"
   v-show="addchild"
@@ -72,7 +73,7 @@
       <v-text-field v-model="email" :error-messages="emailErrors"  label="E-mail" required
          @input="$v.email.$touch()"
         @blur="$v.email.$touch()"
-                      v-lazy-input:debounce="700"
+
         ></v-text-field>
         </v-col>
 
@@ -87,27 +88,6 @@
                       </BirthdayPicker>
                   </v-col>
       </v-row>
-
-        <v-row>
-            <v-subheader>Nachweise</v-subheader>
-            <v-col
-          cols="12"
-          md="4"
-                  >
-            <p v-if="proofs.length==0">Es fehlen noch entsprechende Nachweise (Abstammungsurkunde, Foto der Versichertenkarte o.ä.).</p>
-            <v-list v-for="p in proofs" :key="p.id">
-                <v-list-item>
-                    <v-list-item-title>{{p.id}}</v-list-item-title>
-                    <v-list-item-avatar> <v-img :src="p.img"></v-img></v-list-item-avatar>
-                </v-list-item>
-            </v-list>
-                 <ProofUploadDialog2
-                             proof_type="caregiver certificate"
-                             @updateProofs="onUpdateProofs"
-                             ></ProofUploadDialog2>
-             </v-col>
-        </v-row>
-
     <v-row>
         <v-col>
             <div class="text-center">
@@ -125,7 +105,7 @@
               outlined
               color="indigo"
               type="submit"
-              :disabled="!valid || birthday.length<1 || (proofs.length==0)"
+                :disabled="!valid || birthday.length<1"
             >
               <v-icon>mdi-check</v-icon>
                 Kind hinzufügen
@@ -143,7 +123,7 @@
             <ConsentForm
                 consent_type="P1B"
                 :involved_users="children_array.map(x => x.username)"
-                @consentDecision="onConsentDecision"
+                @consentdecision="onConsentDecision"
       ></ConsentForm>
 
             </v-container>
@@ -157,32 +137,33 @@
  import BirthdayPicker from "@/components/Account/BirthdayPicker";
  import ConsentForm from "@/components/ConsentForm/ConsentForm";
    import { validationMixin } from 'vuelidate'
-  import { required, email } from 'vuelidate/lib/validators'
-import {lazyInput} from 'vue-lazy-input'
- import ProofUploadDialog2 from "@/components/Account/ProofUploadDialog2";
+  import { email } from 'vuelidate/lib/validators'
 
+require('datejs');
+Date.i18n.setLanguage('de-DE');
 
  export default {
-     components: {BirthdayPicker,ConsentForm,ProofUploadDialog2},
+     components: {BirthdayPicker,ConsentForm},
      props: {
+         returnchild: Boolean,
           children:Array,
          loadChildren:Boolean,
+         passed_firstname: String,
+         passed_lastname: String,
+         passed_birthday_date: String,
+         passed_email: String,
       },
             mixins: [validationMixin],
 
         validations: {
             email: {
-                required, email,
+                email,
 
-                isUnique(value) {
-                    // standalone validator ideally should not assume a field is required
-                    if (value === '') return true
-                    return this.$store.dispatch('auth/emailExists', {email: value})
-                }
             }
         },
     data: () => ({
         children_array:[],
+        current_child:'',
         selection:null,
         childdetail:false,
         addchild:false,
@@ -216,8 +197,6 @@ import {lazyInput} from 'vue-lazy-input'
                 const errors = []
                 if (!this.$v.email.$dirty) return errors
                 !this.$v.email.email && errors.push('Bitte eine gültige Email-Adresse eingeben.')
-                !this.$v.email.required && errors.push('Erforderlich.')
-                !this.$v.email.isUnique && errors.push('Diese Email Adresse ist schon vergeben.')
                 return errors
               },
         },
@@ -227,6 +206,10 @@ import {lazyInput} from 'vue-lazy-input'
         } else {
             this.children_array=this.children
         }
+        this.first_name=this.passed_firstname ? this.passed_firstname : ''
+          this.last_name=this.passed_lastname ? this.passed_lastname : ''
+          this.birthday=this.passed_birthday_date ? Date.parse(this.passed_birthday_date).toString('yyyy-MM-dd') : ''
+            this.email_text=this.passed_email ? this.passed_email : ''
       },
       methods: {
           getChildrenDetails: function() {
@@ -245,6 +228,8 @@ import {lazyInput} from 'vue-lazy-input'
              this.email_text=''
              this.addchild=false
              this.proofs=[]
+             this.consented=false
+             this.current_child=''
         },
 
          onUpdateBirthday(payload){
@@ -256,11 +241,17 @@ import {lazyInput} from 'vue-lazy-input'
                       .then((response) => {
                               console.log('Dependent Child added')
                               this.children_array.push({'username':response.data.username,'name':response.data.first_name+' '+response.data.last_name})
-                          this.addchild=false
+                            if (this.returnchild) {
+                                this.returnselectedchild(response.data)
+                            }
+                            this.current_child=response.data.username
                           this.showconsent=true
                       }).catch((e)=> {
-                              console.log('error while adding child ', e)
-                          });
+                          console.log('error while adding child ', e)
+                          }).finally(()=> {
+                            this.addchild=false
+                            this.reset()
+                  });
 
         }
             },
@@ -275,14 +266,22 @@ import {lazyInput} from 'vue-lazy-input'
          },
           onConsentDecision: function(payload) {
            this.consented=payload
-              if (payload) {
+              if (this.consented) {
+                  this.reset()
                   this.$emit('childAdded')
+              } else {
+                    this.$store.dispatch('auth/deleteChild',{username:this.current_child})
+                        .then(()=> {
+                            this.reset()
+                            this.getChildrenDetails()
+                        })
               }
-        }
+        },
+          returnselectedchild: function(payload) {
+              this.$emit('userselected',payload)
+          }
       },
-     directives:{
-      lazyInput
-    }
+
 
   }
 

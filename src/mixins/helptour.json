@@ -1,0 +1,288 @@
+{
+  "App": {
+    "steps": [
+      {
+        "target": "#tracer_navbar",
+        "content": "<p>Starte hier mit deiner Anmeldung!</p>",
+        "params": {
+          "placement": "auto"
+        }
+      }
+    ]
+  },
+  "account": {
+    "steps": [
+      {
+        "target": "#tracer_userdevices_action",
+        "content": "<p>Du kannst hier Geräte als Fastlogin-Geräte registrieren oder wieder entfernen. Beim Fastlogin brauchst du keinen Benutzernamen eingeben. Dafür werden bestimmte Zugangsdaten im Browser gespeichert. Wenn du deine Browserdaten löschst, funktioniert das Fastlogin nicht.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      }
+    ]
+  },
+  "authorized_start": {
+    "steps": [
+      {
+        "target": "#tracer_ssm_sequence_speed_dial",
+        "content": "<p>Hier kannst du neue Benutzer und Diskussionsräume anlegen, Bilder hochladen, fotografieren... </p>",
+        "params": {
+          "placement": "left"
+        }
+      }
+    ]
+  },
+  "caseroom": {
+    "steps": [
+      {
+        "target": "#UserChipGroup",
+        "content": "<p>Hier werden die Teilnehmer des Diskussionsraums angezeigt. ORANGE=Teilnehmer ist noch nicht auf dem aktuellen Stand. GRÜN=Teilnehmer hat Nachrichten gelesen.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      },
+      {
+        "target": "#DeleteUserNewsTagButton",
+        "content": "<p>Wenn Du nicht gerade antworten willst, kannst Du hier wenigstens zu erkennen geben, dass Du die Nachrichten gelesen hast.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      }
+    ]
+  },
+  "Caseroomcreatecard": {
+    "steps": [
+      {
+        "target": "#tracer_caseroomcreate_title",
+        "content": "<p>Bitte gib Deinem Diskussionsraum einen klaren Titel, wie z.B. Marias Rücken o.ä.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      },
+      {
+        "target": "#tracer_caseroomcreate_adduserdialog",
+        "content": "<p>Hier kannst du weitere Personen dem Diskussionsraum hinzufügen.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      }
+    ]
+  },
+  "caseroomforum": {
+    "steps": [
+      {
+        "target": "#tracer_caseroomforum_critem",
+        "content": "<p>Durch Click auf einen Diskussionsraum kannst du diesen öffnen.</p>",
+        "params": {
+          "placement": "top"
+        }
+      },
+      {
+        "target": "#tracer_caseroomforum_datatable",
+        "content": "<p>Wenn du die Datenzeile öffnest, gelangst du zur Außenansicht des Diskussionsraums. Durch einen Click auf den Diskussionsraum kannst du diesen öffnen.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      }
+    ]
+  },
+  "Imagelabeler": {
+    "steps": [
+      {
+        "target": "#tracer_imagelabeler_typeclassifier",
+        "content": "<p>Du musst einen Bildtyp auswählen, also z.B. ob es sich hier um ein Röntgenbild oder ein Foto handelt. Bei den Fotos musst du noch näher bezeichnen, in welcher Position die Person aufgenommen wurde.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      },
+      {
+        "target": "#tracer_imagelabeler_cropselector",
+        "content": "<p>Hier musst du den richtigen Bereich auswählen. Achte darauf, dass die Person oder (bei einem Röntgenbild) die Wirbelsäule in der Mitte ist. Dies Auswahlmaske muss immer quadratisch bleiben.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      },
+      {
+        "target": "#tracer_imagelabeler_xray_slider",
+        "content": "<p>Hier sollst du den Bereich der Wirbelsäule einstellen, den du markiert hast.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      },
+      {
+        "target": "#tracer_imagelabeler_cobbswitch",
+        "content": "<p>Wenn du mit der Markierung der Wirbel fertig bist, kannst du hier in den COBB-Modus wechseln und die klassische Winkelmessung nach COBB durchführen.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      },
+      {
+        "target": "#tracer_imagelabeler_labelStage",
+        "content": "<p>Du kannst - je nach Bildtyp und Modus per Click oder Touch deine Punkte setzen. Der grüne Punkt ist der zuletzt gesetzte und lässt sich mit den Werkzeugen oben noch manipulieren.</p>",
+        "params": {
+          "placement": "bottom"
+        }
+      }
+    ]
+  },
+  "InviteUser": {
+    "steps": [
+      {
+        "target": "#tracer_inviteuser_birthday",
+        "content": "<p>Nach Möglichkeit solltest du das Geburtsdatum des einzuladenden Benutzers eingeben.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      },
+      {
+        "target": "#tracer_inviteuser_email",
+        "content": "<p>Eine E-Mail-Adresse ist erforderlich. Diese darf im System noch nicht vergeben sein, also z.B. Kinder können nicht auf der E-Mail Adresse ihrer Eltern angemeldet werden.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      },
+      {
+        "target": "#tracer_inviteuser_address",
+        "content": "<p>Eine Postadresse brauchst du nur, wenn du den Benutzer mit einem pdf-Dokument einladen möchtest.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      },
+      {
+        "target": "#tracer_inviteuser_roles",
+        "content": "<p>Bitte weise dem eingeladenen Benutzer eine Rolle zu. Ist es Arzt, dann solltest du nach Möglichkeit spezifizieren, ob Kinderarzt oder Orthopäde. Wenn die Fachrichtung nicht aufgeführt ist, kannst du Arzt eingeben.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      }
+    ]
+  },
+  "Metrixcenter": {
+    "steps": [
+      {
+        "target": "#tracer_metrixcenter_tableau",
+        "content": "<p>Hier werden deine Daten in Zeitreihen angezeigt.</p>",
+        "params": {
+          "placement": "bottom"
+        }
+      },
+      {
+        "target": "#tracer_metrixcenter_tableau_caregiver",
+        "content": "<p>Hier werden die Messdaten deiner Kinder in Zeitreihen angezeigt.</p>",
+        "params": {
+          "placement": "bottom"
+        }
+      },
+      {
+        "target": "#tracer_metrixcenter_tableau_med",
+        "content": "<p>Hier werden die Messdaten deiner Patienten in Zeitreihen angezeigt. Du musst dazu nur die Datenreihe öffnen.</p>",
+        "params": {
+          "placement": "bottom"
+        }
+      }
+    ]
+  },
+  "ssmcenter": {
+    "steps": [
+      {
+        "target": ".tracer_ssmcenter_patient",
+        "content": "<p>Hier werden alle Bilder mit ihrem Bearbeitungsstatus angezeigt.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      },
+      {
+        "target": ".tracer_ssmcenter_med",
+        "content": "<p>Du kannst hier die Bilder deiner Kinder / Patienten und die dazugehörigen Bildinformationen einsehen. </p>",
+        "params": {
+          "placement": "auto"
+        }
+      },
+      {
+        "target": ".tracer_ssmcenter_staff",
+        "content": "<p>Du kannst hier die Bilder aller Teilnehmer samt ihres aktuellen Bearbeitungsstandes einsehen.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      },
+      {
+        "target": "#tracer_ssmcenter_add",
+        "content": "<p>Hier kannst du neue Bilder aufnehmen und hochladen.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      },
+      {
+        "target": ".tracer_file_upload",
+        "content": "<p>Hier kannst du Bilder hochladen, die du bereits auf deinem Gerät gespeichert hast.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      },
+            {
+        "target": ".tracer_camera_start",
+        "content": "<p>Hier kannst du die Kamera starten und Bilder direkt erstellen (Empfohlen!)</p>",
+        "params": {
+          "placement": "auto"
+        }
+      },
+                {
+        "target": ".tracer_image_detail",
+        "content": "<p>Click hier drauf und du erfährst Details zu deinem Bild.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      },
+                      {
+        "target": ".tracer_image_edit",
+        "content": "<p>Hier kannst du dein Bild bearbeiten. Die Bearbeitung ist die Voraussetzung, dass Messwerte erzeugt werden können.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      }
+    ]
+  },
+  "Ssmsequencecreator": {
+    "steps": [
+      {
+        "target": "#tracer_ssmseq_userfinder",
+        "content": "<p>Hier musst du zuerst den betreffenden Nutzer finden. </p>",
+        "params": {
+          "placement": "auto"
+        }
+      },
+      {
+        "target": "#tracer_ssmseq_caseroom",
+        "content": "<p>Gibt es für die ausgewählten Nutzer schon einen gemeinsamen Diskussionsraum?</p>",
+        "params": {
+          "placement": "auto"
+        }
+      },
+      {
+        "target": "#tracer_ssmseq_upload",
+        "content": "<p>Hier kannst du nun die Bilder zu deinem Patienten hochladen.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      }
+    ]
+  },
+  "Userfinder": {
+    "steps": [
+      {
+        "target": "#tracer_userfinder_typeofuserselector",
+        "content": "<p>Hier kannst du auswählen, zu welcher Nutzergruppe der Benutzer gehört: Patient/Angehöriger oder Medizinischer Benutzer (Arzt, Orthopädietechniker...)</p>",
+        "params": {
+          "placement": "auto"
+        }
+      },
+      {
+        "target": "#tracer_userfinder_selectedusersgroup",
+        "content": "<p>Hier werden die von dir ausgewählten Benutzer angezeigt. Rot sind Kinder, denen noch kein Elternteil zugeordnet ist. Dies solltest du dann durch einen Click auf das Kind erledigen. Mit dem Kreuz kannst du den Benutzer aus deiner Auswahl wieder entfernen.</p>",
+        "params": {
+          "placement": "auto"
+        }
+      }
+    ]
+  }
+}
